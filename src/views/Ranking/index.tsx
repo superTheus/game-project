@@ -1,49 +1,57 @@
 import { useEffect, useState } from "react";
-import styled from "styled-components";
 import moment from "moment";
 
-import api from "../api";
-import colors from "../utils/colors";
-import { Players } from "../utils/types";
+import api from "../../api";
+import colors from "../../utils/colors";
+import { Players } from "../../utils/types";
 import withReactContent from "sweetalert2-react-content";
 import Swal from "sweetalert2";
+import { Container, RankingContainer } from "./styles";
+import { Load } from "../../components/Load";
 
 export default function Ranking() {
+
+  const [load, setLoad] = useState(true);
 
   const [playersRanking, setPlayersRanking] = useState<Players[]>([]);
 
   async function RankingsPlayers() {
-    const response = await api.get("/ranking");
-    
-    if (response.status == 201) {
-      if(response.data.length <= 0){
-        warning();
+    try {
+      const response = await api.get("/ranking");
+
+      if (response.status == 201) {
+        if (response.data.length <= 0) {
+          warning('Sem Ranking para mostrar');
+        }
+
+        var score = response.data
+
+        score.sort((elementOne: Players, elementTwo: Players) => {
+          if (elementOne.score < elementTwo.score)
+            return 1;
+          if (elementOne.score > elementTwo.score)
+            return -1;
+
+          return 0;
+        });
+
+        setLoad(false);
+        setPlayersRanking(score);
+      } else {
+        setLoad(false);
+        warning('Falha na conexão com API');
       }
-
-      var score = response.data
-
-      score.sort((elementOne: Players, elementTwo: Players) => {
-        if (elementOne.score < elementTwo.score)
-          return 1;
-        if (elementOne.score > elementTwo.score)
-          return -1;
-        
-        return 0;
-      });
-
-      console.log(score);
-
-      setPlayersRanking(score);
-    }else{
-      warning();
+    }catch(e){
+      setLoad(false);
+      warning('Falha na conexão com API');
     }
   }
 
-  async function warning() {
+  async function warning(msg: string) {
     const MySwal = withReactContent(Swal)
 
     MySwal.fire({
-      title: 'Sem Ranking para mostrar',
+      title: msg,
       icon: 'info',
 
       showConfirmButton: true,
@@ -61,6 +69,8 @@ export default function Ranking() {
     RankingsPlayers();
   }, []);
 
+  if(load)
+    return <Load />;
 
   return (
     <Container className="container">
@@ -93,37 +103,3 @@ export default function Ranking() {
     </Container>
   );
 }
-
-const Container = styled.div`
-  width: 100%;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`;
-
-const RankingContainer = styled.div`
-  width: 60%;
-  height: 85vh;
-  border-radius: 5px;
-  background-color: ${colors.pink};
-  align-items: center;
-  padding: 10px;
-  font-family: 'Montserrat', sans-serif;
-  overflow-y: scroll;
-
-  &::-webkit-scrollbar {
-    width: 5px;               /* width of the entire scrollbar */
-  }
-
-  &::-webkit-scrollbar-track {
-    background: ${colors.pink};
-    border-radius: 10px;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background-color: ${colors.gray};
-    border-radius: 20px;
-  }
-`;

@@ -1,8 +1,7 @@
 import React from 'react';
-import styled from 'styled-components';
 import Typed from 'typed.js';
 
-import colors from '../utils/colors';
+import { Container, RankingContainer } from './styles';
 
 interface typedInterface {
   current: {}
@@ -25,6 +24,7 @@ export default function Rules() {
         <li> O Jogador pode usar o Curar que recupera pontos aleatório de 5 à 15 </li>
         <li> O Monstro pode usar o Ataque básico que tira ponto aleatório de 6 à 12 </li>
         <li> O Monstro pode usar o Ataque Especial que tira ponto aleatório de 8 à 16 podendo ser usado à cada 3 turnos </li>
+        <li> O Monstro tem 50% de chance de ficar atordoado após receber um ataque especial </li>
       </ol>
       
       <p className='mt-2'>E isso é tudo...</p>
@@ -59,36 +59,3 @@ export default function Rules() {
     </Container>
   );
 }
-
-const Container = styled.div`
-  width: 100%;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`;
-
-const RankingContainer = styled.div`
-  width: 60%;
-  height: 85vh;
-  border-radius: 5px;
-  background-color: ${colors.pink};
-  padding: 10px;
-  font-family: 'Montserrat', sans-serif;
-  overflow-y: scroll;
-
-  &::-webkit-scrollbar {
-    width: 5px;               /* width of the entire scrollbar */
-  }
-
-  &::-webkit-scrollbar-track {
-    background: ${colors.pink};
-    border-radius: 10px;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background-color: ${colors.gray};
-    border-radius: 20px;
-  }
-`;
