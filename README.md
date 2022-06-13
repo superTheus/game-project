@@ -17,7 +17,7 @@ Para instalar o Game Monster, siga estas etapas:
 
 Clonando o Projeto
 ```
-git clone https://gitlab.com/j.matheussouza2019/game.git
+git clone https://github.com/superTheus/game-project.git
 ```
 Baixar dependências
 ``` 
